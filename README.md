@@ -231,8 +231,6 @@ spring.datasource.password=${DB_PASSWORD}
 - Para producción, configurar CORS con orígenes específicos
 
 ## Autores
-
-Equipo LvlUp - Duoc UC
 - Desarrollo Fullstack II
 - Evaluación Parcial N°3
 - Carlos Muñoz
