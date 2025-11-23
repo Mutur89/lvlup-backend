@@ -1,6 +1,5 @@
 package com.lvlup.tienda.models.products;
 
-import com.lvlup.tienda.models.audit.Audit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="products")
@@ -52,6 +53,21 @@ public class Product {
     @Min(value = 0, message = "El stock debe ser mayor o igual a 0")
     private Integer stock;
 
-    @Embedded
-    private Audit audit = new Audit();
+    // Timestamps para compatibilidad con BD existente
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

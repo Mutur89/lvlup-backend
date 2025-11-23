@@ -2,7 +2,6 @@ package com.lvlup.tienda.models.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lvlup.tienda.models.audit.Audit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -75,16 +75,20 @@ public class User {
     @Size(max=255)
     private String rol;
 
+    // Timestamps para compatibilidad con BD existente
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
     // Campo transitorio para indicar si es admin durante el registro
     @Transient
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean admin;
 
-    @Embedded
-    private Audit audit = new Audit();
-
-    // Relación Many-to-Many con roles
-    @JsonIgnoreProperties({"users"})
+    // Relación Many-to-Many con roles para Spring Security
+    @JsonIgnoreProperties({"users", "password"})
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "users_roles",
@@ -96,6 +100,17 @@ public class User {
 
     public User() {
         this.roles = new ArrayList<>();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
     @Override
