@@ -26,8 +26,7 @@ public class User {
     @Size(max=255)
     private String nombre;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El campo apellido es obligatorio")
+    @Column
     @Size(max=255)
     private String apellido;
 
@@ -43,32 +42,27 @@ public class User {
     @Size(min=6, max=255)
     private String contrasena;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El campo RUT es obligatorio")
+    @Column
     @Size(max=255)
     private String rut;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El campo dirección es obligatorio")
+    @Column
     @Size(max=255)
     private String direccion;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El campo teléfono es obligatorio")
+    @Column
     @Size(max=255)
     private String telefono;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El campo región es obligatorio")
+    @Column
     @Size(max=255)
     private String region;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El campo comuna es obligatorio")
+    @Column
     @Size(max=255)
     private String comuna;
 
-    @Column(name = "fecha_nacimiento", nullable = false)
+    @Column(name = "fecha_nacimiento")
     private Long fechaNacimiento;
 
     @Column(nullable = false)
@@ -89,13 +83,14 @@ public class User {
 
     // Relación Many-to-Many con roles para Spring Security
     @JsonIgnoreProperties({"users", "password"})
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name="user_id"),
             inverseJoinColumns = @JoinColumn(name="role_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})}
     )
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Role> roles;
 
     public User() {

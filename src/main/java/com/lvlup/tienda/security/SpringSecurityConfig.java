@@ -43,7 +43,7 @@ public class SpringSecurityConfig {
                     authz
                             // Rutas públicas
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
-                            .requestMatchers("/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**").permitAll()
+                            .requestMatchers("/", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
 
                             // Rutas de usuarios
                             .requestMatchers(HttpMethod.GET, "/api/v1/users").hasRole("ADMIN")
@@ -58,17 +58,17 @@ public class SpringSecurityConfig {
                             .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id}").hasRole("ADMIN")
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/products/{id}").hasRole("ADMIN")
 
-                            // Rutas de órdenes
-                            .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasAnyRole("ADMIN", "VENDEDOR")
-                            .requestMatchers(HttpMethod.GET, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR", "CLIENTE")
-                            .requestMatchers(HttpMethod.POST, "/api/v1/orders").hasRole("CLIENTE")
-                            .requestMatchers(HttpMethod.PUT, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR")
+                            // Rutas de órdenes (comentadas temporalmente hasta crear OrderController)
+                            // .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasAnyRole("ADMIN", "VENDEDOR")
+                            // .requestMatchers(HttpMethod.GET, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR", "CLIENTE")
+                            // .requestMatchers(HttpMethod.POST, "/api/v1/orders").hasRole("CLIENTE")
+                            // .requestMatchers(HttpMethod.PUT, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR")
 
-                            // Rutas de carritos
-                            .requestMatchers(HttpMethod.GET, "/api/v1/carts/**").hasRole("CLIENTE")
-                            .requestMatchers(HttpMethod.POST, "/api/v1/carts/**").hasRole("CLIENTE")
-                            .requestMatchers(HttpMethod.PUT, "/api/v1/carts/**").hasRole("CLIENTE")
-                            .requestMatchers(HttpMethod.DELETE, "/api/v1/carts/**").hasRole("CLIENTE")
+                            // Rutas de carritos (comentadas temporalmente hasta crear CartController)
+                            // .requestMatchers(HttpMethod.GET, "/api/v1/carts/**").hasRole("CLIENTE")
+                            // .requestMatchers(HttpMethod.POST, "/api/v1/carts/**").hasRole("CLIENTE")
+                            // .requestMatchers(HttpMethod.PUT, "/api/v1/carts/**").hasRole("CLIENTE")
+                            // .requestMatchers(HttpMethod.DELETE, "/api/v1/carts/**").hasRole("CLIENTE")
 
                             .anyRequest().authenticated();
                 })
