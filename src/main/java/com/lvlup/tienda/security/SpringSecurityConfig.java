@@ -43,6 +43,7 @@ public class SpringSecurityConfig {
                     authz
                             // Rutas públicas
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/login").permitAll()
                             .requestMatchers("/", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
 
                             // Rutas de usuarios
