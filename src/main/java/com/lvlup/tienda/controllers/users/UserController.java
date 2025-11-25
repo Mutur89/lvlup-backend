@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication; // <--- IMPORTANTE: No borrar
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.findAll());
     }
 
+    // ✅ NUEVO ENDPOINT: Este es el que te falta para el Login
+    // Debe ir ANTES de /{id} para evitar conflictos
+    @GetMapping("/profile")
+    @Operation(summary = "Obtener perfil", description = "Obtiene los datos del usuario autenticado")
+    public ResponseEntity<User> getProfile(Authentication authentication) {
+        return this.userService.findByCorreo(authentication.getName())
+                .map(user -> ResponseEntity.ok(user))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Obtener usuario por ID", description = "Retorna un usuario específico por su ID")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
@@ -47,7 +58,7 @@ public class UserController {
     @Operation(summary = "Registrar usuario", description = "Registra un nuevo usuario cliente en el sistema")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
         user.setAdmin(false);
-        user.setRol("cliente"); // Asignar rol cliente por defecto
+        user.setRol("CLIENTE"); // <--- Corrección de Mayúsculas que ya aplicaste
         return this.createUser(user);
     }
 

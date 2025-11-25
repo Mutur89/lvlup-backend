@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,12 +27,26 @@ public class JpaUserDetailsService implements UserDetailsService {
         User user = userRepository.findByCorreo(correo)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con correo: " + correo));
 
-        // Convertir roles a GrantedAuthority
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        // Lista para acumular todas las autoridades (Roles + Permisos)
+        List<GrantedAuthority> authorities = new ArrayList<>();
 
-        // Retornar UserDetails de Spring Security
+        // 1. Agregar los Roles como autoridades (ej: "ROLE_ADMIN")
+        authorities.addAll(
+                user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList())
+        );
+
+        // 2. Agregar los Permisos de cada Rol como autoridades (ej: "PRODUCT_CREATE")
+        user.getRoles().forEach(role -> {
+            if (role.getPermissions() != null) {
+                role.getPermissions().forEach(permission -> {
+                    authorities.add(new SimpleGrantedAuthority(permission.getName()));
+                });
+            }
+        });
+
+        // Retornar UserDetails de Spring Security con la lista completa
         return new org.springframework.security.core.userdetails.User(
                 user.getCorreo(),
                 user.getContrasena(),

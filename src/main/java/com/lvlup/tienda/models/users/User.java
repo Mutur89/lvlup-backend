@@ -38,7 +38,7 @@ public class User {
 
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotBlank(message = "El campo contraseña es obligatorio")
+    //@NotBlank(message = "El campo contraseña es obligatorio")
     @Size(min=6, max=255)
     private String contrasena;
 
