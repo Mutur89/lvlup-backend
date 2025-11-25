@@ -60,16 +60,16 @@ public class SpringSecurityConfig {
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/products/{id}").hasRole("ADMIN")
 
                             // Rutas de órdenes (comentadas temporalmente hasta crear OrderController)
-                            // .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasAnyRole("ADMIN", "VENDEDOR")
-                            // .requestMatchers(HttpMethod.GET, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR", "CLIENTE")
-                            // .requestMatchers(HttpMethod.POST, "/api/v1/orders").hasRole("CLIENTE")
-                            // .requestMatchers(HttpMethod.PUT, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasAnyRole("ADMIN", "VENDEDOR")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR", "CLIENTE")
+                            .requestMatchers(HttpMethod.POST, "/api/v1/orders").hasRole("CLIENTE")
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/orders/{id}").hasAnyRole("ADMIN", "VENDEDOR")
 
                             // Rutas de carritos (comentadas temporalmente hasta crear CartController)
-                            // .requestMatchers(HttpMethod.GET, "/api/v1/carts/**").hasRole("CLIENTE")
-                            // .requestMatchers(HttpMethod.POST, "/api/v1/carts/**").hasRole("CLIENTE")
-                            // .requestMatchers(HttpMethod.PUT, "/api/v1/carts/**").hasRole("CLIENTE")
-                            // .requestMatchers(HttpMethod.DELETE, "/api/v1/carts/**").hasRole("CLIENTE")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/carts/**").hasRole("CLIENTE")
+                            .requestMatchers(HttpMethod.POST, "/api/v1/carts/**").hasRole("CLIENTE")
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/carts/**").hasRole("CLIENTE")
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/carts/**").hasRole("CLIENTE")
 
                             .anyRequest().authenticated();
                 })
