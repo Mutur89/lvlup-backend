@@ -49,7 +49,13 @@ SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .requestMatchers("/", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
             
             // NUEVO: Productos públicos (Ver lista y detalle)
-            .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll() 
+            .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
+
+            // --- RUTAS PROTEGIDAS (PRODUCTOS) ---
+            // Permitir que usuarios autenticados actualicen stock (para checkout)
+            .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id}").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/v1/products").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/v1/products/{id}").hasRole("ADMIN")
 
             // --- RUTAS PROTEGIDAS (USUARIOS) ---
             // IMPORTANTE: Recuperamos estas líneas para proteger los datos de usuarios
@@ -60,6 +66,10 @@ SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .requestMatchers(HttpMethod.POST, "/api/v1/users").hasRole("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/api/v1/users/{id}").hasAnyRole("ADMIN", "CLIENTE")
             .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").hasRole("ADMIN")
+
+            // --- RUTAS PROTEGIDAS (CARRITOS) ---
+            // Todos los usuarios autenticados pueden acceder a su propio carrito
+            .requestMatchers("/api/v1/carts/**").hasAnyRole("ADMIN", "VENDEDOR", "CLIENTE")
 
             // --- REGLAS GLOBALES ---
             .anyRequest().authenticated();
